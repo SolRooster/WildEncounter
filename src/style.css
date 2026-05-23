@@ -1,0 +1,373 @@
+/* ===== Wild Encounter — The Roster's vibe check ===== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-deep: #0d1620;
+  --bg-mid: #16213e;
+  --bg-light: #1f2b47;
+  --grass-dark: #1a4d2e;
+  --grass-mid: #2d6e3e;
+  --grass-light: #7ac74c;
+  --text: #e0e6ed;
+  --text-bright: #ffffff;
+  --text-muted: #8892a4;
+  --accent: #f7d02c;
+  --accent-soft: rgba(247, 208, 44, 0.18);
+  --accent-glow: rgba(247, 208, 44, 0.4);
+  --danger: #ef5350;
+  --radius: 14px;
+  --shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+html, body {
+  min-height: 100vh;
+}
+
+body {
+  font-family: 'Segoe UI Variable Text', system-ui, -apple-system, sans-serif;
+  background:
+    radial-gradient(ellipse at top, var(--bg-mid) 0%, var(--bg-deep) 60%),
+    var(--bg-deep);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+}
+
+.screen {
+  max-width: 720px;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.screen.enter,
+.intro-screen,
+.complete-screen,
+.review-screen {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== Grass banner (the iconic Pokémon tall grass) ===== */
+.grass-banner {
+  height: 140px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 16px,
+      rgba(122, 199, 76, 0.12) 16px,
+      rgba(122, 199, 76, 0.12) 18px
+    ),
+    linear-gradient(180deg, transparent 0%, var(--grass-dark) 60%, var(--grass-mid) 100%);
+  border-radius: var(--radius) var(--radius) 0 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.grass-banner::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background:
+    radial-gradient(circle at 10% 50%, var(--grass-light) 0 4px, transparent 5px),
+    radial-gradient(circle at 30% 70%, var(--grass-light) 0 4px, transparent 5px),
+    radial-gradient(circle at 50% 50%, var(--grass-light) 0 4px, transparent 5px),
+    radial-gradient(circle at 70% 70%, var(--grass-light) 0 4px, transparent 5px),
+    radial-gradient(circle at 90% 50%, var(--grass-light) 0 4px, transparent 5px);
+  opacity: 0.5;
+}
+
+/* ===== Intro / Complete screens ===== */
+.intro-screen,
+.complete-screen {
+  background: var(--bg-mid);
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.intro-content {
+  padding: 32px 40px 40px;
+  text-align: center;
+}
+
+.intro-eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--grass-light);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.intro-title {
+  font-family: 'Segoe UI Variable Display', system-ui, sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--text-bright);
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--accent), #ee8130, #f95587);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.intro-tagline {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text);
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.intro-tagline strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.intro-rules {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 28px auto;
+  max-width: 360px;
+  text-align: left;
+}
+
+.rule {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  border-left: 3px solid var(--grass-light);
+}
+
+/* ===== Buttons ===== */
+.primary-btn {
+  padding: 14px 32px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: inherit;
+  background: var(--accent);
+  color: #1a1a2e;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px var(--accent-glow);
+}
+
+.primary-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px var(--accent-glow);
+}
+
+.primary-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.primary-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.ghost-btn {
+  padding: 12px 22px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ghost-btn:hover {
+  color: var(--text-bright);
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* ===== Step screens ===== */
+.progress-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--grass-light), var(--accent));
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.progress-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.step-card {
+  background: var(--bg-mid);
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 36px 40px;
+  box-shadow: var(--shadow);
+}
+
+.step-prompt {
+  font-family: 'Segoe UI Variable Display', system-ui, sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.step-subtitle {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 20px;
+}
+
+.step-input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: var(--bg-light);
+  color: var(--text-bright);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  resize: vertical;
+  min-height: 56px;
+  line-height: 1.5;
+}
+
+.step-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.step-input.flash {
+  animation: flash-error 0.4s ease;
+}
+
+@keyframes flash-error {
+  0%, 100% { border-color: var(--accent); }
+  50% { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(239, 83, 80, 0.2); }
+}
+
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  gap: 12px;
+}
+
+/* ===== Review screen ===== */
+.review-card {
+  text-align: left;
+}
+
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 24px 0;
+}
+
+.review-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  background: var(--bg-light);
+  border-radius: 10px;
+  border-left: 3px solid var(--grass-light);
+}
+
+.review-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.review-value {
+  font-size: 0.95rem;
+  color: var(--text-bright);
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+/* ===== Dev warning ===== */
+.dev-warning {
+  margin-top: 16px;
+  padding: 10px 14px;
+  background: rgba(239, 83, 80, 0.1);
+  border: 1px solid rgba(239, 83, 80, 0.3);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #ffab9a;
+  text-align: center;
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 600px) {
+  .intro-title {
+    font-size: 2.2rem;
+  }
+  .intro-content,
+  .step-card {
+    padding: 28px 24px;
+  }
+  .step-prompt {
+    font-size: 1.3rem;
+  }
+  .primary-btn {
+    width: 100%;
+    padding: 14px;
+  }
+  .step-actions {
+    flex-direction: column-reverse;
+  }
+  .step-actions .ghost-btn,
+  .step-actions span {
+    width: 100%;
+    text-align: center;
+  }
+}
