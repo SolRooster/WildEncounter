@@ -47,8 +47,11 @@ export default {
     if (!payload.applicant || typeof payload.applicant !== 'string') {
       return jsonResponse({ error: 'Missing applicant name' }, 400, env, requestOrigin);
     }
-    if (!payload.answers || typeof payload.answers !== 'object') {
-      return jsonResponse({ error: 'Missing answers' }, 400, env, requestOrigin);
+    // Accept either the new `fields` array (survey-agnostic) or the legacy `answers` object
+    const hasFields = Array.isArray(payload.fields);
+    const hasAnswers = payload.answers && typeof payload.answers === 'object';
+    if (!hasFields && !hasAnswers) {
+      return jsonResponse({ error: 'Missing fields' }, 400, env, requestOrigin);
     }
 
     // Size guard — Discord embeds have field-size limits and we don't want huge dumps
@@ -58,7 +61,7 @@ export default {
     }
 
     // Build the Discord embed
-    const discordPayload = buildDiscordEmbed(payload.applicant, payload.answers);
+    const discordPayload = buildDiscordEmbed(payload.applicant, payload.fields, payload.answers);
 
     // Forward to Discord
     if (!env.DISCORD_WEBHOOK_URL) {
@@ -84,27 +87,41 @@ export default {
   },
 };
 
-function buildDiscordEmbed(applicant, answers) {
+function buildDiscordEmbed(applicant, fields, legacyAnswers) {
   const truncate = (s, max = 1024) => {
     if (!s) return '*(no answer)*';
     return s.length > max ? s.slice(0, max - 1) + '…' : s;
   };
+
+  // Prefer the new ordered `fields` array. Fall back to the old hardcoded
+  // answers shape so older clients (or cached builds) still work.
+  let embedFields;
+  if (Array.isArray(fields) && fields.length > 0) {
+    // Discord allows max 25 fields per embed
+    embedFields = fields.slice(0, 25).map((f) => ({
+      name: truncate(String(f.name || 'Question'), 256),
+      value: truncate(f.value),
+    }));
+  } else {
+    const a = legacyAnswers || {};
+    embedFields = [
+      { name: '1.  Thoughts on "She-Hulk"', value: truncate(a.shehulk) },
+      { name: '2.  Thoughts on Steve Harvey (no context)', value: truncate(a.steve_harvey) },
+      { name: '3.  Korra — better show and/or avatar?', value: truncate(a.korra) },
+      { name: '4.  The definitive waifu', value: truncate(a.waifu) },
+      { name: '5.  Top 5 Pokémon', value: truncate(a.top_five) },
+    ];
+  }
 
   return {
     username: 'Wild Encounter',
     avatar_url: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png',
     embeds: [
       {
-        title: `🌿  A wild ${applicant} appeared!`,
+        title: `🌿  A wild ${truncate(applicant, 200)} appeared!`,
         description: 'Submitted via Wild Encounter — The Roster vibe check.',
         color: 0xf7d02c,
-        fields: [
-          { name: '1.  Thoughts on "She-Hulk"', value: truncate(answers.shehulk) },
-          { name: '2.  Thoughts on Steve Harvey (no context)', value: truncate(answers.steve_harvey) },
-          { name: '3.  Korra — better show and/or avatar?', value: truncate(answers.korra) },
-          { name: '4.  The definitive waifu', value: truncate(answers.waifu) },
-          { name: '5.  Top 5 Pokémon', value: truncate(answers.top_five) },
-        ],
+        fields: embedFields,
         footer: { text: '👍 vote them in   ·   👎 discuss   ·   🤔 ponder' },
         timestamp: new Date().toISOString(),
       },

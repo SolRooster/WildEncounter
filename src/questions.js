@@ -1,37 +1,40 @@
 /**
  * The Roster's vibe check.
- * Order matters — these go one at a time, building drama toward Top 5 Pokémon.
+ * Order matters — these go one at a time.
+ *
+ * To change the survey: just edit this array. The Discord embed is built
+ * dynamically from these prompts, so you never need to touch the Worker.
  */
 export const QUESTIONS = [
   {
-    id: 'shehulk',
-    prompt: 'What are your thoughts about the show "She-Hulk"?',
-    placeholder: 'Be honest. Defend your position.',
+    id: 'israel',
+    prompt: 'What are your thoughts on Israel and the Jewish community?',
+    placeholder: 'Take your time. There may be more to this question than it lets on.',
+    type: 'textarea',
+    subtitle: 'Read it carefully.',
+  },
+  {
+    id: 'top_three_games',
+    prompt: 'What are your top three games? No order necessary.',
+    placeholder: 'Three. That\u2019s the limit. Choose with conviction.',
     type: 'textarea',
   },
   {
-    id: 'steve_harvey',
-    prompt: 'What are your thoughts about Steve Harvey?',
-    placeholder: 'No context provided. None will be provided.',
-    type: 'textarea',
-    subtitle: 'No context. None given.',
-  },
-  {
-    id: 'korra',
-    prompt: 'Do you feel that Korra was a better show and/or avatar?',
-    placeholder: 'Show, avatar, both, neither — defend your stance.',
+    id: 'cartoon_reboot',
+    prompt: 'If you could reboot any cartoon, which one would it be and why?',
+    placeholder: 'The "why" matters more than the "what."',
     type: 'textarea',
   },
   {
-    id: 'waifu',
-    prompt: 'Who is the definitive waifu?',
-    placeholder: "There can only be one. Choose wisely.",
+    id: 'controversial_run',
+    prompt: 'What controversial storyline/run do you find enjoyable in Marvel or DC? Why?',
+    placeholder: 'Defend the indefensible.',
     type: 'textarea',
   },
   {
-    id: 'top_five',
-    prompt: 'Top 5 Pokémon.',
-    placeholder: 'In any order. The ranking will be questioned regardless.',
+    id: 'overrated_run',
+    prompt: 'What widely renowned storyline/run do you find overrated for Marvel or DC? Why?',
+    placeholder: 'Be brave. Someone here loves it.',
     type: 'textarea',
     subtitle: 'The final test.',
   },
